@@ -43,7 +43,6 @@ body {
   background:
     radial-gradient(120% 90% at 50% 18%, var(--bg-glow) 0%, var(--bg-mid) 46%, var(--bg-deep) 100%),
     var(--bg-deep);
-  background-attachment: fixed;
   overflow-x: hidden;
 }
 
@@ -195,12 +194,21 @@ body::before {
   background: transparent;
   border: 1px solid transparent;
   border-radius: 3px;
-  padding: 9px 15px;
+  padding: 13px 16px;                    /* ~44px tap target for iOS */
   cursor: pointer;
   white-space: nowrap;
+  -webkit-tap-highlight-color: transparent;
   transition: color .3s var(--ease), border-color .3s var(--ease), background .3s var(--ease);
 }
 .tab:hover { color: var(--gold-light); }
+
+/* Visible keyboard focus (brand gold), not shown on mouse/touch */
+.tab:focus-visible,
+.card-head:focus-visible {
+  outline: 2px solid var(--gold-light);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 .tab.active {
   color: var(--gold-light);
   border-color: rgba(201, 162, 75, .5);
@@ -380,9 +388,15 @@ body::before {
   display: grid;
   grid-template-rows: 0fr;
   opacity: 0;
+  visibility: hidden;   /* keep collapsed content out of the a11y tree */
+  transition: grid-template-rows .38s var(--ease), opacity .38s var(--ease), visibility 0s linear .38s;
+}
+.card.is-open .card-detail {
+  grid-template-rows: 1fr;
+  opacity: 1;
+  visibility: visible;
   transition: grid-template-rows .38s var(--ease), opacity .38s var(--ease);
 }
-.card.is-open .card-detail { grid-template-rows: 1fr; opacity: 1; }
 .card-detail-inner { overflow: hidden; }
 
 .card-desc {

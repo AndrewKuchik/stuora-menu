@@ -73,7 +73,7 @@
     const liquid = (g.liquid && tint)
       ? `<path class="liquid" d="${g.liquid}" fill="${tint}"/>`
       : "";
-    return `<svg class="glass" viewBox="0 0 100 130" role="img" aria-label="${type} glass">`
+    return `<svg class="glass" viewBox="0 0 100 130" aria-hidden="true">`
       + `<g class="glass-g">${liquid}`
       + `<path class="outline" pathLength="1" d="${g.outline}"/></g></svg>`;
   }
@@ -156,7 +156,6 @@
     { t: ["raspberry"],                 k: "berry",     c: "#c04a63" },
     { t: ["blackcurrant"],              k: "berry",     c: "#4e2340" },
     { t: ["redcurrant"],                k: "berry",     c: "#b23048" },
-    { t: ["currant"],                   k: "berry",     c: "#8f2740" },
     { t: ["cowberry", "lingonberry"],   k: "berry",     c: "#a3281f" },
     { t: ["cherry"],                    k: "cherry",    c: "#7a1f2b" },
     { t: ["plum"],                      k: "round",     c: "#6a2f4a" },
@@ -180,18 +179,21 @@
     { t: ["pineapple", "ananas"],       k: "pineapple", c: "#d9b23e" },
     { t: ["coconut"],                   k: "coconut",   c: "#e7ddc7" },
     { t: ["vanilla"],                   k: "bean",      c: "#5a3a24" },
-    { t: ["jasmin", "oolong", "kombucha", "grape juice"], k: "leaf", c: "#8aa04a" },
+    { t: ["jasmin", "oolong", "kombucha"], k: "leaf",  c: "#8aa04a" },
     { t: ["citrus"],                    k: "citrus",    c: "#e0be3f" }
   ];
 
   function garnishList(item) {
+    // scan the real name + ingredients only (not the prose description),
+    // matching whole words (+ optional plural) so "pine" ≠ "pineapple",
+    // "herb" ≠ "herbal", "currant" ≠ "redcurrant".
     const hay = (item.name + " "
-      + (Array.isArray(item.ingredients) ? item.ingredients.join(" ") : "") + " "
-      + (item.description || "")).toLowerCase();
+      + (Array.isArray(item.ingredients) ? item.ingredients.join(" ") : "")).toLowerCase();
+    const has = term => new RegExp("\\b" + term + "s?\\b").test(hay);
     const out = [];
     const seen = new Set();
     for (const row of GARNISH_TOKENS) {
-      if (row.t.some(term => hay.includes(term))) {
+      if (row.t.some(has)) {
         const key = row.k + row.c;
         if (!seen.has(key)) { seen.add(key); out.push({ k: row.k, c: row.c }); }
       }
@@ -288,7 +290,7 @@
       const tab = el("button", "tab", tabLabel(cat.title));
       tab.type = "button";
       tab.dataset.target = cat.id;
-      if (i === 0) tab.classList.add("active");
+      if (i === 0) { tab.classList.add("active"); tab.setAttribute("aria-current", "true"); }
       tab.addEventListener("click", () => {
         const section = document.getElementById(cat.id);
         if (section) section.scrollIntoView({ behavior: "smooth", block: "start" });
@@ -425,7 +427,8 @@
     tabsEl.querySelectorAll(".tab").forEach(t => {
       const on = t.dataset.target === id;
       t.classList.toggle("active", on);
-      if (on) t.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" });
+      if (on) { t.setAttribute("aria-current", "true"); t.scrollIntoView({ behavior: "smooth", inline: "center", block: "nearest" }); }
+      else t.removeAttribute("aria-current");
     });
   }
 
