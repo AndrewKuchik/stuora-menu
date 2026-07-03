@@ -1,0 +1,68 @@
+{
+  "bar": {
+    "name": "Stuora Bar",
+    "tagline": "Infused with tradition",
+    "spirit": "No reason, no rush, just one good drink.",
+    "currency": "€"
+  },
+  "categories": [
+    {
+      "id": "cocktails",
+      "title": "Cocktails",
+      "price": 11,
+      "items": [
+        { "name": "Raspberry & Pine Hanky Panky", "description": "Tart raspberry over resinous pine and herbal shadow", "glass": "martini", "tint": "#8a2036", "ingredients": ["Gin", "Sweet vermouth", "Fernet-Branca", "Raspberry", "Pine"] },
+        { "name": "Tomato & Sprats Mary", "description": "Savoury and briny, smoke curling underneath", "signature": true, "glass": "highball", "tint": "#9e3620", "ingredients": ["Tomato & sprats vodka", "Tomato", "Brine & spice", "Lemon"] },
+        { "name": "Cowberry Negroni", "description": "Wild lingonberry sharpening a bittersweet dusk", "glass": "rocks", "tint": "#93281f", "ingredients": ["Gin", "Campari", "Sweet vermouth", "Lingonberry"] },
+        { "name": "Mushroom Old Fashioned", "description": "Earthy, woodland-deep, wrapped in velvet warmth", "signature": true, "glass": "rocks", "tint": "#7a4a1e", "ingredients": ["Mushroom bourbon", "Sugar", "Aromatic bitters"] },
+        { "name": "Cherry Boulevardier", "description": "Dark cherry folded into bitter, brooding whisky", "glass": "rocks", "tint": "#6e1f2a", "ingredients": ["Cherry bourbon", "Campari", "Sweet vermouth"] },
+        { "name": "Milk Punch", "description": "Silken and clarified, softly spiced and cool", "glass": "rocks", "tint": "#cbb07a", "ingredients": ["White spirit", "Clarified milk", "Citrus", "Spice"] },
+        { "name": "Vanilla & Grape Daiquiri", "description": "Bright grape lifted by a whisper of vanilla", "glass": "coupe", "tint": "#8a5a6e", "ingredients": ["Vanilla & grape rum", "Lime", "Sugar"] },
+        { "name": "Quince Gimlet", "description": "Honeyed quince, taut and quietly botanical", "glass": "coupe", "tint": "#c69a4a", "ingredients": ["Gin", "Quince", "Lime"] },
+        { "name": "Rhubarb Fizz", "description": "Tart rhubarb, effervescent and blush-pink", "glass": "highball", "tint": "#c76b7a", "ingredients": ["Rhubarb gin", "Lemon", "Sugar", "Soda"] },
+        { "name": "Raspberry Clover Club", "description": "Tart raspberry beneath a pale silken foam", "glass": "coupe", "tint": "#b5455f", "ingredients": ["Gin", "Raspberry", "Lemon", "Egg white"] },
+        { "name": "Cherry Manhattan", "description": "Dark cherry, spice and velvet in one glass", "glass": "martini", "tint": "#6e1f2a", "ingredients": ["Cherry bourbon", "Sweet vermouth", "Aromatic bitters"] },
+        { "name": "Redcurrant & Hibiscus Margarita", "description": "Tart redcurrant and hibiscus, bright and floral", "glass": "coupe", "tint": "#a83048", "ingredients": ["Redcurrant & hibiscus tequila", "Lime", "Orange liqueur"] },
+        { "name": "Blackcurrant & Chilli Mule", "description": "Deep blackcurrant, ginger snap, a slow chilli ember", "glass": "mug", "tint": "#4e2340", "ingredients": ["Blackcurrant & chilli vodka", "Ginger beer", "Lime"] }
+      ]
+    },
+    {
+      "id": "infusions",
+      "title": "Our Infusions",
+      "price": 5,
+      "items": [
+        { "name": "Passionfruit Vodka", "description": "Golden and tropical, tart with a sunlit edge", "glass": "shot", "tint": "#d19a2e" },
+        { "name": "Blackcurrant & Chilli Vodka", "description": "Dark berry chased by a slow chilli warmth", "glass": "shot", "tint": "#4e2340" },
+        { "name": "Smoked Plum Vodka", "description": "Ripe plum drawn through gentle woodsmoke", "signature": true, "glass": "shot", "tint": "#5a2740" },
+        { "name": "Hrenovuha Vodka", "description": "Horseradish fire, bracing and unapologetically bold", "glass": "shot", "tint": "#e6dcc0" },
+        { "name": "Tomato & Sprats Mary Vodka", "description": "Savoury and briny with a smoky depth", "glass": "shot", "tint": "#9e3620" },
+        { "name": "Vanilla & Grape Rum", "description": "Mellow vanilla over ripe, rounded grape", "glass": "shot", "tint": "#8a5a6e" },
+        { "name": "Ananas & Coconut Rum", "description": "Sun-warmed pineapple and soft toasted coconut", "glass": "shot", "tint": "#d9c07a" },
+        { "name": "Redcurrant & Hibiscus Tequila", "description": "Tart redcurrant laced with floral hibiscus", "glass": "shot", "tint": "#a83048" },
+        { "name": "Raspberry & Pine Gin", "description": "Bright raspberry over resinous forest pine", "glass": "shot", "tint": "#7a1f2b" },
+        { "name": "Rabarbar Gin", "description": "Crisp rhubarb, tart and coolly botanical", "glass": "shot", "tint": "#c76b7a" },
+        { "name": "Carrot & Dill Bourbon", "description": "Earthy carrot brightened with a herbal dill lift", "glass": "shot", "tint": "#c9772e" },
+        { "name": "Mushroom Bourbon", "description": "Woodland-earthy, deep and velvet-smooth", "glass": "shot", "tint": "#7a4a1e" },
+        { "name": "Cherry Bourbon", "description": "Dark cherry steeped into warm, oaken depth", "glass": "shot", "tint": "#6e1f2a" }
+      ]
+    },
+    {
+      "id": "bites",
+      "title": "Bites",
+      "price": 10,
+      "items": [
+        { "name": "Open Sandwich Selection", "description": "Four small open sandwiches with assorted toppings: aspic, cured pork fat, pâté, sprats, beef tartare, and pork tartare.", "glass": "plate" },
+        { "name": "Pickled Selection", "description": "Pickled cucumbers, marinated onions, olives, and mini pickled garlic.", "glass": "plate" },
+        { "name": "House Pickles", "description": "Pickled cucumbers, marinated onions, olives, and mini pickled garlic.", "glass": "plate" }
+      ]
+    },
+    {
+      "id": "non-alcoholic",
+      "title": "Non-Alcoholic",
+      "price": null,
+      "items": [
+        { "name": "Jasmin Oolong Kombucha", "description": "Floral jasmine and oolong, gently sparkling and cool", "glass": "highball", "tint": "#b98a3e", "price": 5 }
+      ]
+    }
+  ]
+}

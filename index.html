@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Stuora — Menu</title>
+  <meta name="description" content="Stuora Bar — Infused with tradition. Craft cocktails & house infusions in Old Riga." />
+  <meta name="theme-color" content="#2A0710" />
+
+  <!-- Google Fonts: Cinzel, Cormorant Garamond, Playfair Display, Inter, Great Vibes -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;500;600&family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Playfair+Display:ital,wght@0,400;0,500;0,600;1,400&family=Inter:wght@300;400;500&family=Great+Vibes&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- Thin art-deco frame drawn over the whole viewport -->
+  <div class="deco-frame" aria-hidden="true">
+    <span class="corner tl"></span>
+    <span class="corner tr"></span>
+    <span class="corner bl"></span>
+    <span class="corner br"></span>
+  </div>
+
+  <header class="masthead">
+    <p class="since">Since 2024</p>
+
+    <!-- Neon handwritten logo (text fallback until logo file is dropped in) -->
+    <h1 class="logo">
+      <span class="logo-neon">Stuora</span>
+    </h1>
+
+    <p class="tagline">Infused with tradition</p>
+    <p class="spirit">No reason, no rush, just one good drink.</p>
+
+    <div class="deco-rule" aria-hidden="true">
+      <span class="star">&#10022;</span>
+    </div>
+  </header>
+
+  <!-- Sticky category tabs -->
+  <nav class="tabs" id="tabs" aria-label="Menu categories"></nav>
+
+  <main id="menu" class="menu">
+    <!-- Sections injected from menu.json -->
+    <p class="loading" id="loading">Setting the table…</p>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+      <div class="deco-rule footer-rule" aria-hidden="true"><span class="star">&#10022;</span></div>
+
+      <p class="foot-name">Stuora Bar</p>
+      <p class="foot-line">Audēju iela 15 <span class="muted">(entrance from Rīdzenes iela)</span></p>
+      <p class="foot-line">Vecrīga · Rīga · Latvia</p>
+
+      <p class="foot-line foot-phone"><a href="tel:+37129270207">+371 29 270 207</a></p>
+
+      <div class="hours">
+        <div class="hours-row"><span>Thu · Sun</span><span class="gold">18:00 – 01:00</span></div>
+        <div class="hours-row"><span>Fri · Sat</span><span class="gold">18:00 – 02:00</span></div>
+        <div class="hours-row"><span>Mon – Wed</span><span class="muted">private events only</span></div>
+      </div>
+
+      <p class="walkins">Walk-ins welcome</p>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
