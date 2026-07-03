@@ -68,6 +68,7 @@ python -m http.server 8000
 - Живой сайт: **https://andrewkuchik.github.io/stuora-menu/** (Pages, ветка `main`, `/root`).
 - QR-код: `stuora-menu-qr.png` (900×900, бордо на кремовом) — ведёт на этот URL.
 - Обновление сайта: правим файл → `git commit` → `git push` → Pages пересобирается сам (~1 мин).
+- Деплой идёт через **GitHub Actions** (`.github/workflows/pages.yml`), а не «legacy». Так надёжнее и без случайных «try again later»; логи — во вкладке Actions.
 - ⚠️ Если нужен свой домен (`menu.stuora.lv`) — тогда URL/QR можно закрепить навсегда; сейчас QR ведёт на github.io.
 
 ### ○ Этап 3 — контент-финал (позже, по готовности материалов)
