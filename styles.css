@@ -408,6 +408,81 @@ body::before {
 }
 
 /* ============================================================
+   Pour stage — the "made to order" moment on tap
+   A large glass draws + fills, and garnish drops in.
+   Bites assemble layer by layer.
+   ============================================================ */
+.pour-stage {
+  position: relative;
+  height: 158px;
+  margin: 8px auto 14px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+}
+
+/* Hero glass */
+.hero-glass { width: 116px; height: 150px; overflow: visible; display: block; }
+.hero-glass .h-outline {
+  fill: none;
+  stroke: var(--gold);
+  stroke-width: 1.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-dasharray: 1;
+  stroke-dashoffset: 1;                 /* draws itself on open */
+  transition: stroke-dashoffset 1s var(--ease) .1s;
+}
+.hero-glass .h-liquid {
+  opacity: .85;
+  transform: scaleY(0);                 /* pours up on open */
+  transform-box: fill-box;
+  transform-origin: 50% 100%;
+  transition: transform .9s var(--ease) .5s;
+}
+.card.is-open .hero-glass .h-outline { stroke-dashoffset: 0; }
+.card.is-open .hero-glass .h-liquid  { transform: scaleY(1); }
+
+/* Garnish that tumbles into the glass */
+.garnish-layer { position: absolute; inset: 0; pointer-events: none; }
+.mote {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  width: var(--sz, 18px);
+  height: var(--sz, 18px);
+  margin-left: calc(var(--sz, 18px) / -2);
+  opacity: 0;
+  filter: drop-shadow(0 2px 3px rgba(0, 0, 0, .35));
+}
+.mote svg { width: 100%; height: 100%; display: block; }
+.card.is-open .mote { animation: mote-drop .9s var(--ease) var(--d, .4s) both; }
+@keyframes mote-drop {
+  0%   { opacity: 0; transform: translate(var(--x), -34px) rotate(0deg) scale(.5); }
+  30%  { opacity: 1; }
+  68%  { transform: translate(var(--x), var(--y)) rotate(var(--r)) scale(1); }
+  80%  { transform: translate(var(--x), calc(var(--y) - 7px)) rotate(var(--r)); }  /* little bounce */
+  100% { opacity: 1; transform: translate(var(--x), var(--y)) rotate(var(--r)); }
+}
+
+/* Bites — layered assembly */
+.hero-plate { position: relative; width: 130px; height: 150px; }
+.layer {
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(-50%, -40px);
+  opacity: 0;
+}
+.layer svg { display: block; width: 100%; height: auto; }
+.card.is-open .layer { animation: layer-stack .55s var(--ease) var(--d, 0s) both; }
+@keyframes layer-stack {
+  0%   { opacity: 0; transform: translate(-50%, -40px) scale(.92); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: translate(-50%, var(--ly)) scale(1); }
+}
+
+/* ============================================================
    Footer — brass plate feel
    ============================================================ */
 .footer {
@@ -488,6 +563,11 @@ body::before {
   .glass .outline { transition: none; stroke-dashoffset: 0; }
   .glass .liquid  { transition: none; transform: scaleY(1); }
   .chev-toggle, .card-detail { transition: none; }
+  /* Pour stage shows its finished state, no motion */
+  .hero-glass .h-outline { transition: none; stroke-dashoffset: 0; }
+  .hero-glass .h-liquid  { transition: none; transform: scaleY(1); }
+  .mote  { animation: none; opacity: 1; transform: translate(var(--x), var(--y)) rotate(var(--r)); }
+  .layer { animation: none; opacity: 1; transform: translate(-50%, var(--ly)); }
 }
 
 /* Larger phones / small tablets — keep the intimate column */
