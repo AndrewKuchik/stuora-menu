@@ -86,8 +86,9 @@ body::before {
 .masthead {
   max-width: var(--maxw);
   margin: 0 auto;
-  padding: 42px 28px 8px;
+  padding: 46px 20px 8px;
   text-align: center;
+  overflow: visible;
 }
 
 .since {
@@ -102,11 +103,14 @@ body::before {
 }
 
 /* --- Neon handwritten logo --- */
-.logo { line-height: 1; margin: 6px 0 14px; }
+.logo { line-height: 1.16; margin: 4px 0 12px; overflow: visible; }
 .logo-neon {
+  display: inline-block;
   font-family: var(--f-logo);
   font-weight: 400;
-  font-size: clamp(4.4rem, 22vw, 6.2rem);
+  /* smaller vw so the script swashes + glow never touch the screen edges */
+  font-size: clamp(3.8rem, 17vw, 6.2rem);
+  padding: .06em .16em .14em;   /* breathing room for glow, avoids clipping */
   color: #ffeaf4;
   /* Layered magenta neon glow */
   text-shadow:
@@ -421,6 +425,23 @@ body::before {
   justify-content: center;
 }
 
+/* Soft glow of the drink's own colour — makes it pop and look juicy */
+.stage-glow {
+  position: absolute;
+  left: 50%;
+  top: var(--surf, 84px);
+  width: 132px;
+  height: 132px;
+  transform: translate(-50%, -50%);
+  border-radius: 50%;
+  background: radial-gradient(circle, var(--tint, #7a1f2b) 0%, transparent 62%);
+  opacity: 0;
+  filter: blur(7px);
+  pointer-events: none;
+  transition: opacity .9s var(--ease) .4s;
+}
+.card.is-open .stage-glow { opacity: .34; }
+
 /* Hero glass */
 .hero-glass { width: 116px; height: 150px; overflow: visible; display: block; }
 .hero-glass .h-outline {
@@ -434,12 +455,13 @@ body::before {
   transition: stroke-dashoffset 1s var(--ease) .1s;
 }
 .hero-glass .h-liquid {
-  opacity: .85;
+  opacity: .9;
   transform: scaleY(0);                 /* pours up on open */
   transform-box: fill-box;
   transform-origin: 50% 100%;
   transition: transform .9s var(--ease) .5s;
 }
+.hero-glass { filter: drop-shadow(0 3px 6px rgba(0, 0, 0, .3)); }
 .card.is-open .hero-glass .h-outline { stroke-dashoffset: 0; }
 .card.is-open .hero-glass .h-liquid  { transform: scaleY(1); }
 
@@ -465,21 +487,57 @@ body::before {
   100% { opacity: 1; transform: translate(var(--x), var(--y)) rotate(var(--r)); }
 }
 
-/* Bites — layered assembly */
+/* Juice splash — a ripple + droplets burst as the garnish lands */
+.splash { position: absolute; left: 50%; top: 0; width: 0; height: 100%; pointer-events: none; }
+.splash .ripple {
+  position: absolute;
+  left: -17px;
+  top: var(--surf, 96px);
+  width: 34px;
+  height: 11px;
+  border: 1.5px solid var(--tint, #d98);
+  border-radius: 50%;
+  opacity: 0;
+  transform: scale(.3);
+}
+.card.is-open .splash .ripple { animation: ripple 1s var(--ease) 1.05s; }
+@keyframes ripple {
+  0%   { opacity: .6; transform: scale(.3); }
+  100% { opacity: 0;  transform: scale(1.5); }
+}
+.splash .drop {
+  position: absolute;
+  left: var(--dx, 0);
+  top: calc(var(--surf, 96px) + 2px);
+  width: 6px;
+  height: 6px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: var(--tint, #d98);
+  opacity: 0;
+}
+.card.is-open .splash .drop { animation: droplet .7s var(--ease) var(--dd, 1.05s); }
+@keyframes droplet {
+  0%   { opacity: 0; transform: translateY(2px) scale(.6); }
+  35%  { opacity: .95; }
+  100% { opacity: 0; transform: translateY(-24px) scale(1); }
+}
+
+/* Bites — each dish assembles from its own pieces */
 .hero-plate { position: relative; width: 130px; height: 150px; }
 .layer {
   position: absolute;
   left: 50%;
   top: 0;
-  transform: translate(-50%, -40px);
+  transform: translate(-50%, -42px);
   opacity: 0;
 }
 .layer svg { display: block; width: 100%; height: auto; }
 .card.is-open .layer { animation: layer-stack .55s var(--ease) var(--d, 0s) both; }
 @keyframes layer-stack {
-  0%   { opacity: 0; transform: translate(-50%, -40px) scale(.92); }
+  0%   { opacity: 0; transform: translate(calc(-50% + var(--lx, 0px)), -42px) scale(.9); }
   60%  { opacity: 1; }
-  100% { opacity: 1; transform: translate(-50%, var(--ly)) scale(1); }
+  100% { opacity: 1; transform: translate(calc(-50% + var(--lx, 0px)), var(--ly)) scale(1); }
 }
 
 /* ============================================================
@@ -566,8 +624,10 @@ body::before {
   /* Pour stage shows its finished state, no motion */
   .hero-glass .h-outline { transition: none; stroke-dashoffset: 0; }
   .hero-glass .h-liquid  { transition: none; transform: scaleY(1); }
+  .stage-glow { transition: none; opacity: .3; }
   .mote  { animation: none; opacity: 1; transform: translate(var(--x), var(--y)) rotate(var(--r)); }
-  .layer { animation: none; opacity: 1; transform: translate(-50%, var(--ly)); }
+  .splash { display: none; }
+  .layer { animation: none; opacity: 1; transform: translate(calc(-50% + var(--lx, 0px)), var(--ly)); }
 }
 
 /* Larger phones / small tablets — keep the intimate column */

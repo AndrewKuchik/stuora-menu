@@ -88,88 +88,190 @@
       + `${liquid}<path class="h-outline" pathLength="1" d="${g.outline}"/></svg>`;
   }
 
-  /* ---------- garnish motifs (tiny SVG dropped into the hero glass) ---------- */
+  /* ---------- garnish: every real ingredient gets its own little SVG ----------
+     shape() draws one motif; GARNISH_TOKENS maps a keyword → {shape, colour};
+     garnishList() scans the drink's name + ingredients and returns the set of
+     motifs actually present, so each drink drops exactly what it's made of.   */
   const HERB = "#6c8a3a";
-  function motif(kind, color) {
-    switch (kind) {
+  function shape(k, c) {
+    switch (k) {
       case "cherry":
-        return `<g fill="${color}"><circle cx="8" cy="16" r="4"/><circle cx="16" cy="16" r="4"/></g>`
+        return `<g fill="${c}"><circle cx="8" cy="16" r="4"/><circle cx="16" cy="16" r="4"/></g>`
              + `<path d="M8 13 Q10 5 13 4 M16 13 Q14 6 13 4" stroke="${HERB}" stroke-width="1.2" fill="none"/>`;
-      case "plum":
-        return `<ellipse cx="12" cy="13" rx="6" ry="7" fill="${color}"/>`
-             + `<path d="M12 6 Q12 13 12 20" stroke="rgba(0,0,0,.22)" stroke-width="1" fill="none"/>`;
+      case "round":   // plum / quince / passionfruit — a single stone-fruit
+        return `<ellipse cx="12" cy="13" rx="6.2" ry="7" fill="${c}"/>`
+             + `<path d="M12 6 Q12 12 12 19" stroke="rgba(0,0,0,.18)" stroke-width="1" fill="none"/>`
+             + `<path d="M12 6 Q13 3 15.5 3.5" stroke="${HERB}" stroke-width="1.2" fill="none"/>`;
       case "grape":
-        return `<g fill="${color}"><circle cx="9" cy="12" r="3"/><circle cx="15" cy="12" r="3"/><circle cx="12" cy="9" r="3"/><circle cx="12" cy="15" r="3"/><circle cx="9.5" cy="17" r="2.6"/><circle cx="14.5" cy="17" r="2.6"/></g>`;
-      case "citrus":
-        return `<path d="M3 15 A9 9 0 0 1 21 15 Z" fill="${color}"/>`
+        return `<g fill="${c}"><circle cx="9" cy="12" r="3"/><circle cx="15" cy="12" r="3"/><circle cx="12" cy="9" r="3"/><circle cx="12" cy="15" r="3"/><circle cx="9.5" cy="17" r="2.6"/><circle cx="14.5" cy="17" r="2.6"/></g>`;
+      case "tomato":
+        return `<circle cx="12" cy="13" r="7" fill="${c}"/>`
+             + `<path d="M12 7 l-3 -3 M12 7 v-4 M12 7 l3 -3" stroke="${HERB}" stroke-width="1.4" fill="none" stroke-linecap="round"/>`
+             + `<ellipse cx="9.5" cy="11" rx="1.5" ry="2.3" fill="rgba(255,255,255,.35)"/>`;
+      case "fish":    // sprat
+        return `<g fill="${c}"><path d="M4 12 Q10 7 17 12 Q10 17 4 12Z"/><path d="M17 12 l4 -3 v6Z"/></g>`
+             + `<circle cx="7.5" cy="12" r="1" fill="#2a2f33"/>`;
+      case "citrus":  // lime / lemon / orange wedge
+        return `<path d="M3 15 A9 9 0 0 1 21 15 Z" fill="${c}"/>`
              + `<path d="M3 15 A9 9 0 0 1 21 15" fill="none" stroke="#f5e6c8" stroke-width="1"/>`
-             + `<g stroke="#f5e6c8" stroke-width=".7" opacity=".8"><path d="M12 15 V6.5"/><path d="M12 15 L5.5 13.5"/><path d="M12 15 L18.5 13.5"/></g>`;
-      case "leaf":
-        return `<path d="M12 3 C18 8 18 17 12 21 C6 17 6 8 12 3Z" fill="${HERB}"/>`
-             + `<path d="M12 5 V19" stroke="#4f6a2a" stroke-width="1"/>`;
+             + `<g stroke="#f5e6c8" stroke-width=".7" opacity=".85"><path d="M12 15 V6.5"/><path d="M12 15 L5.5 13.5"/><path d="M12 15 L18.5 13.5"/></g>`;
+      case "pine":    // pine sprig
+        return `<path d="M12 3 V21" stroke="${c}" stroke-width="1.6"/>`
+             + `<g stroke="${c}" stroke-width="1.3" stroke-linecap="round"><path d="M12 7 l-5 3 M12 7 l5 3 M12 11 l-5 3 M12 11 l5 3 M12 15 l-4 2.5 M12 15 l4 2.5"/></g>`;
+      case "leaf":    // dill / mint / herb
+        return `<path d="M12 3 C18 8 18 17 12 21 C6 17 6 8 12 3Z" fill="${c}"/>`
+             + `<path d="M12 5 V19" stroke="rgba(0,0,0,.25)" stroke-width="1"/>`;
+      case "flower":  // hibiscus
+        return `<g fill="${c}"><ellipse cx="12" cy="6.5" rx="3" ry="4"/><ellipse cx="17" cy="10" rx="3" ry="4" transform="rotate(72 17 10)"/><ellipse cx="15" cy="16" rx="3" ry="4" transform="rotate(144 15 16)"/><ellipse cx="9" cy="16" rx="3" ry="4" transform="rotate(216 9 16)"/><ellipse cx="7" cy="10" rx="3" ry="4" transform="rotate(288 7 10)"/></g>`
+             + `<circle cx="12" cy="12" r="2.4" fill="#e0be3f"/>`;
       case "chilli":
-        return `<path d="M6 6 Q9 6 10 9 Q13 18 18 19 Q12 21 9 15 Q6 10 6 6Z" fill="${color}"/>`
+        return `<path d="M6 6 Q9 6 10 9 Q13 18 18 19 Q12 21 9 15 Q6 10 6 6Z" fill="${c}"/>`
              + `<path d="M6 6 Q7 4 9 4" stroke="${HERB}" stroke-width="1.4" fill="none"/>`;
       case "mushroom":
-        return `<path d="M4 12 A8 5 0 0 1 20 12 Z" fill="${color}"/>`
+        return `<path d="M4 12 A8 5 0 0 1 20 12 Z" fill="${c}"/>`
              + `<rect x="9.5" y="11.5" width="5" height="7.5" rx="2" fill="#d9c7a3"/>`;
-      case "bean":
-        return `<rect x="10" y="4" width="4.2" height="16" rx="2.1" fill="${color}"/>`;
-      default: /* berry */
-        return `<g fill="${color}"><circle cx="9" cy="12" r="3"/><circle cx="15" cy="12" r="3"/><circle cx="12" cy="9.5" r="3"/><circle cx="12" cy="14.5" r="3"/><circle cx="12" cy="12" r="3"/></g>`
+      case "root":    // horseradish / carrot / ginger
+        return `<path d="M12 4 Q15 12 12 20 Q9 12 12 4Z" fill="${c}"/>`
+             + `<g stroke="${HERB}" stroke-width="1.2" stroke-linecap="round"><path d="M12 4 l-2.5 -2 M12 4 v-3 M12 4 l2.5 -2"/></g>`;
+      case "stalk":   // rhubarb
+        return `<path d="M9 4 Q13 12 11 20" stroke="${c}" stroke-width="3.4" fill="none" stroke-linecap="round"/>`
+             + `<path d="M9 4 Q6 2 4 3 Q6 5 9 5Z" fill="${HERB}"/>`;
+      case "pineapple":
+        return `<ellipse cx="12" cy="15" rx="5.5" ry="6.5" fill="${c}"/>`
+             + `<g stroke="rgba(0,0,0,.25)" stroke-width=".7"><path d="M8 11 l8 8 M16 11 l-8 8 M12 9 v12"/></g>`
+             + `<path d="M12 9 l-3 -5 l3 2 l3 -2Z" fill="${HERB}"/>`;
+      case "coconut":
+        return `<circle cx="12" cy="13" r="7" fill="${c}"/>`
+             + `<g fill="rgba(0,0,0,.4)"><circle cx="9" cy="11" r="1"/><circle cx="14" cy="10.5" r="1"/><circle cx="11.5" cy="14" r="1"/></g>`;
+      case "bean":    // vanilla pod
+        return `<rect x="10" y="4" width="4.2" height="16" rx="2.1" fill="${c}"/>`;
+      default:        // berry cluster (raspberry / currant / lingonberry)
+        return `<g fill="${c}"><circle cx="9" cy="12" r="3"/><circle cx="15" cy="12" r="3"/><circle cx="12" cy="9.5" r="3"/><circle cx="12" cy="14.5" r="3"/><circle cx="12" cy="12" r="3"/></g>`
              + `<path d="M12 8 Q12.5 4.5 15 4.5" stroke="${HERB}" stroke-width="1.1" fill="none"/>`;
     }
   }
 
-  function inferGarnish(item) {
-    if (item.garnish) return item.garnish;               // explicit override
-    const s = (item.name + " " + (item.description || "")).toLowerCase();
-    const tint = item.tint || "#b5455f";
-    const has = (...w) => w.some(x => s.includes(x));
-    if (has("cherry"))                                    return { kind: "cherry", color: tint, count: 3 };
-    if (has("plum"))                                      return { kind: "plum",   color: tint, count: 3 };
-    if (has("grape"))                                     return { kind: "grape",  color: tint, count: 3 };
-    if (has("raspberry", "currant", "cowberry", "lingonberry", "clover", "berry"))
-                                                          return { kind: "berry",  color: tint, count: 4 };
-    if (has("mushroom"))                                  return { kind: "mushroom", color: "#8a5a2a", count: 3 };
-    if (has("vanilla"))                                   return { kind: "bean",   color: "#5a3a24", count: 3 };
-    if (has("pine", "dill", "mint", "herb", "hibiscus", "hrenovuha", "horseradish", "carrot"))
-                                                          return { kind: "leaf",   color: HERB, count: 3 };
-    if (has("lime", "mule", "margarita", "gimlet", "fizz", "rhubarb", "rabarbar"))
-                                                          return { kind: "citrus", color: "#8fa04a", count: 3 };
-    if (has("lemon", "passionfruit", "ananas", "pineapple", "coconut", "kombucha", "oolong", "jasmin", "quince"))
-                                                          return { kind: "citrus", color: "#d6b24a", count: 3 };
-    return { kind: "berry", color: tint, count: 4 };
+  // keyword → motif. Order matters: specific terms before generic ones.
+  const GARNISH_TOKENS = [
+    { t: ["raspberry"],                 k: "berry",     c: "#c04a63" },
+    { t: ["blackcurrant"],              k: "berry",     c: "#4e2340" },
+    { t: ["redcurrant"],                k: "berry",     c: "#b23048" },
+    { t: ["currant"],                   k: "berry",     c: "#8f2740" },
+    { t: ["cowberry", "lingonberry"],   k: "berry",     c: "#a3281f" },
+    { t: ["cherry"],                    k: "cherry",    c: "#7a1f2b" },
+    { t: ["plum"],                      k: "round",     c: "#6a2f4a" },
+    { t: ["quince"],                    k: "round",     c: "#d3a83a" },
+    { t: ["passionfruit", "passion"],   k: "round",     c: "#c9772e" },
+    { t: ["grape"],                     k: "grape",     c: "#7d5568" },
+    { t: ["tomato"],                    k: "tomato",    c: "#c0341f" },
+    { t: ["sprat"],                     k: "fish",      c: "#c2ccd2" },
+    { t: ["lime"],                      k: "citrus",    c: "#8fa04a" },
+    { t: ["lemon"],                     k: "citrus",    c: "#e0be3f" },
+    { t: ["orange"],                    k: "citrus",    c: "#d68327" },
+    { t: ["pine"],                      k: "pine",      c: "#4f6a2a" },
+    { t: ["dill", "mint", "herb"],      k: "leaf",      c: "#6c8a3a" },
+    { t: ["hibiscus"],                  k: "flower",    c: "#b23048" },
+    { t: ["chilli", "chili"],           k: "chilli",    c: "#c0341f" },
+    { t: ["mushroom"],                  k: "mushroom",  c: "#8a5a2a" },
+    { t: ["horseradish", "hrenovuha"],  k: "root",      c: "#e6dcc0" },
+    { t: ["carrot"],                    k: "root",      c: "#d1791f" },
+    { t: ["ginger"],                    k: "root",      c: "#d9b877" },
+    { t: ["rhubarb", "rabarbar"],       k: "stalk",     c: "#c05a6e" },
+    { t: ["pineapple", "ananas"],       k: "pineapple", c: "#d9b23e" },
+    { t: ["coconut"],                   k: "coconut",   c: "#e7ddc7" },
+    { t: ["vanilla"],                   k: "bean",      c: "#5a3a24" },
+    { t: ["jasmin", "oolong", "kombucha", "grape juice"], k: "leaf", c: "#8aa04a" },
+    { t: ["citrus"],                    k: "citrus",    c: "#e0be3f" }
+  ];
+
+  function garnishList(item) {
+    const hay = (item.name + " "
+      + (Array.isArray(item.ingredients) ? item.ingredients.join(" ") : "") + " "
+      + (item.description || "")).toLowerCase();
+    const out = [];
+    const seen = new Set();
+    for (const row of GARNISH_TOKENS) {
+      if (row.t.some(term => hay.includes(term))) {
+        const key = row.k + row.c;
+        if (!seen.has(key)) { seen.add(key); out.push({ k: row.k, c: row.c }); }
+      }
+      if (out.length >= 4) break;                 // keep it tasteful, max 4
+    }
+    if (!out.length) out.push({ k: "berry", c: item.tint || "#b5455f" });
+    return out;
   }
 
+  // where the drink's surface sits in the 158px stage — so garnish lands IN the drink
+  const SURFACE = { martini: 58, coupe: 60, highball: 84, shot: 94, rocks: 92, mug: 88, plate: 96 };
+  function surfaceY(type) { return SURFACE[type] || 90; }
+
   function garnishLayer(item) {
-    const gz = inferGarnish(item);
-    const n = Math.max(1, gz.count || 3);
+    const list = garnishList(item);
+    const n = list.length;
+    const base = surfaceY(item.glass);
     let html = `<span class="garnish-layer" aria-hidden="true">`;
-    for (let i = 0; i < n; i++) {
+    list.forEach((m, i) => {
       const t = n === 1 ? 0.5 : i / (n - 1);
-      const x = Math.round((t - 0.5) * 42);            // -21..21 px across the mouth
-      const y = 92 + (i % 2 ? 12 : 0) + i * 2;         // settle depth into the drink
-      const r = (i % 2 ? 1 : -1) * (10 + i * 6);       // gentle tumble
-      const d = (0.42 + i * 0.13).toFixed(2);          // staggered fall
-      const sz = 17 + (i % 2 ? 3 : 0);
+      const x = Math.round((t - 0.5) * 44);            // spread across the mouth
+      const y = base + (i % 2 ? 11 : 2) + i * 2;       // settle into the drink
+      const r = (i % 2 ? 1 : -1) * (8 + i * 7);        // gentle tumble
+      const d = (0.5 + i * 0.15).toFixed(2);           // staggered fall
+      const sz = 19 + (i % 2 ? 3 : 0);
       html += `<span class="mote" style="--x:${x}px;--y:${y}px;--r:${r}deg;--d:${d}s;--sz:${sz}px">`
-           +  `<svg viewBox="0 0 24 24">${motif(gz.kind, gz.color)}</svg></span>`;
-    }
+           +  `<svg viewBox="0 0 24 24">${shape(m.k, m.c)}</svg></span>`;
+    });
     return html + `</span>`;
   }
 
-  function bitesStage() {
-    // a plate, then layers dropping and stacking (open-sandwich feel)
-    const L = [
-      { d: "0s",   ly: 100, w: 128, svg: `<svg viewBox="0 0 128 40"><ellipse cx="64" cy="20" rx="58" ry="13" fill="none" stroke="var(--gold)" stroke-width="1.4"/><ellipse cx="64" cy="18" rx="44" ry="9" fill="none" stroke="var(--gold-deep)" stroke-width="1"/></svg>` },
-      { d: ".14s", ly: 74,  w: 92,  svg: `<svg viewBox="0 0 92 26"><rect x="3" y="4" width="86" height="18" rx="7" fill="#cdaa6e"/></svg>` },
-      { d: ".28s", ly: 60,  w: 84,  svg: `<svg viewBox="0 0 84 20"><rect x="3" y="3" width="78" height="13" rx="5" fill="#8a5a3a"/></svg>` },
-      { d: ".42s", ly: 48,  w: 80,  svg: `<svg viewBox="0 0 80 18"><g fill="#7a1f2b"><circle cx="22" cy="9" r="5"/><circle cx="40" cy="9" r="5"/><circle cx="58" cy="9" r="5"/></g></svg>` }
+  // little juice splash at the surface once the garnish lands
+  function splashLayer() {
+    let html = `<span class="splash" aria-hidden="true"><i class="ripple"></i>`;
+    [-12, -4, 5, 12].forEach((dx, i) => {
+      html += `<i class="drop" style="--dx:${dx}px;--dd:${(1.02 + i * 0.05).toFixed(2)}s"></i>`;
+    });
+    return html + `</span>`;
+  }
+
+  // full drink stage: soft glow + hero glass that pours + garnish + splash
+  function drinkStage(item) {
+    return `<span class="stage-glow" aria-hidden="true"></span>`
+         + heroGlassSVG(item.glass, item.tint)
+         + garnishLayer(item)
+         + splashLayer();
+  }
+
+  /* ---------- bites: each dish assembles from what it's actually made of ---------- */
+  const DISH = "<svg viewBox='0 0 140 34'><ellipse cx='70' cy='17' rx='64' ry='14' fill='none' stroke='var(--gold)' stroke-width='1.4'/><ellipse cx='70' cy='15' rx='50' ry='10' fill='none' stroke='var(--gold-deep)' stroke-width='1'/></svg>";
+
+  function bitePieces(item) {
+    const name = (item.name || "").toLowerCase();
+    if (name.includes("sandwich")) {
+      // open sandwiches: bread base, spread, then assorted toppings
+      return [
+        { d: "0s",   ly: 104, lx: 0,  w: 132, svg: DISH },
+        { d: ".16s", ly: 80,  lx: 0,  w: 96,  svg: "<svg viewBox='0 0 96 24'><rect x='3' y='4' width='90' height='16' rx='6' fill='#cdaa6e'/><rect x='3' y='4' width='90' height='5' rx='3' fill='#e0c489'/></svg>" },
+        { d: ".30s", ly: 64,  lx: 0,  w: 86,  svg: "<svg viewBox='0 0 86 16'><rect x='3' y='3' width='80' height='10' rx='4' fill='#9a6a3c'/></svg>" },
+        { d: ".44s", ly: 50,  lx: 0,  w: 84,  svg: "<svg viewBox='0 0 84 18'><ellipse cx='18' cy='9' rx='8' ry='4.5' fill='#c2ccd2'/><circle cx='42' cy='9' r='5.5' fill='#8a2f2a'/><circle cx='64' cy='9' r='5' fill='#7a9a3f'/></svg>" }
+      ];
+    }
+    // pickled selection / house pickles: a dish scattered with pickles
+    const cuke   = "<svg viewBox='0 0 24 24'><circle cx='12' cy='12' r='9' fill='#7d9a44'/><circle cx='12' cy='12' r='6' fill='#c9d99a'/><g fill='#eaf1cf'><circle cx='12' cy='9.5' r='1'/><circle cx='9.6' cy='13' r='1'/><circle cx='14.4' cy='13' r='1'/></g></svg>";
+    const onion  = "<svg viewBox='0 0 24 24'><circle cx='12' cy='12' r='9' fill='none' stroke='#dcc9d9' stroke-width='2.6'/><circle cx='12' cy='12' r='5.5' fill='none' stroke='#c3aec1' stroke-width='1.6'/></svg>";
+    const olive  = "<svg viewBox='0 0 24 24'><ellipse cx='12' cy='12' rx='6' ry='7.5' fill='#5b6b2e'/><ellipse cx='12' cy='9' rx='1.6' ry='2' fill='#b4472c'/></svg>";
+    const garlic = "<svg viewBox='0 0 24 24'><path d='M12 4 Q17 10 15 18 Q12 21 9 18 Q7 10 12 4Z' fill='#efe7d3'/><path d='M12 5 Q12 12 12 18' stroke='rgba(0,0,0,.12)' stroke-width='1'/></svg>";
+    return [
+      { d: "0s",   ly: 104, lx: 0,   w: 132, svg: DISH },
+      { d: ".16s", ly: 84,  lx: -38, w: 30,  svg: cuke },
+      { d: ".28s", ly: 80,  lx: -12, w: 30,  svg: onion },
+      { d: ".40s", ly: 86,  lx: 16,  w: 26,  svg: olive },
+      { d: ".52s", ly: 82,  lx: 40,  w: 24,  svg: garlic }
     ];
+  }
+
+  function bitesStage(item) {
     let html = `<span class="hero-plate" aria-hidden="true">`;
-    L.forEach(l => {
-      html += `<span class="layer" style="--ly:${l.ly}px;--d:${l.d};width:${l.w}px">${l.svg}</span>`;
+    bitePieces(item).forEach(l => {
+      html += `<span class="layer" style="--ly:${l.ly}px;--lx:${l.lx}px;--d:${l.d};width:${l.w}px">${l.svg}</span>`;
     });
     return html + `</span>`;
   }
@@ -240,10 +342,11 @@
         detail.id = id;
         const inner = el("div", "card-detail-inner");
         const isBite = item.glass === "plate";
-        const stageHTML = isBite
-          ? bitesStage()
-          : `${heroGlassSVG(item.glass, item.tint)}${garnishLayer(item)}`;
-        inner.appendChild(el("div", "pour-stage" + (isBite ? " is-bite" : ""), stageHTML));
+        const stage = el("div", "pour-stage" + (isBite ? " is-bite" : ""),
+          isBite ? bitesStage(item) : drinkStage(item));
+        if (item.tint) stage.style.setProperty("--tint", item.tint);
+        if (!isBite) stage.style.setProperty("--surf", surfaceY(item.glass) + "px");
+        inner.appendChild(stage);
         if (item.description) inner.appendChild(el("p", "card-desc", item.description));
         if (Array.isArray(item.ingredients) && item.ingredients.length) {
           const ul = el("ul", "ingredients");
